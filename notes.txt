@@ -1,0 +1,43 @@
+FINAL PROJECT IDEAS
+- idk lol
+- Balisong tricks database
+- Rubik's cube list of good ones
+    - Best price at different cube shops
+    - best price for order
+
+- List of books, tv shows, movies
+    - wnt to watch
+    - Have reqad/watched and rate them
+    - can share with other people
+    - public profile
+    - most popular books of other users in different categories
+
+- add with siri shortcuts or app or something or text
+- web app for iphone and notifications (https://www.pushengage.com/documentation/setting-up-web-push-notifications-for-ios-ipad/#:~:text=Web%20Push%20notifications%20are%20displayed,page%20within%20the%20web%20app.)
+(https://johan.im/writings/ios-homescreen-web-app/)
+- book reccomendatiosn (other users or AI) (https://blog.findyournextbook.ai/find-your-next-book-building-a-book-recommendation-engine-with-openai-apis-4cf5a84ebe8a)
+- book recom(nyt, goodfreads, etc)
+
+database:
+- Book 
+- User
+
+
+Idea:
+Book/TV SHow/Movie manager where you can
+- add books to account
+    - select want to read or read
+    - rate books
+- view books in account
+
+
+
+
+Databses
+- books (user id, title, author, read, rating)
+- TV Show(title, watched, rating)
+- movie (title, watched, rating)
+- User(name, hashed password, email)
+- profile(user id, profile pic, books to show etc)
+
+
