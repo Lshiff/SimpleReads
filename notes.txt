@@ -1,3 +1,37 @@
+deployment options
+- https://appliku.com/post/deploy-django-to-aws-ec2
+- pythonanywere
+- oracle cloud
+- pinggy.io for qui9ck localhost
+- google cloud run
+- vercel
+- ngrok for domain
+- digital ocean
+- duckdns domain
+- certbot certificat
+- google appengine
+- namecheap domain
+
+- gcp, firebase, data store, 
+
+
+DOM
+
+- scoring, profile, see how many you've said to read and then read
+
+joey
+- active, on deck, suggestions, read
+
+- notes on book, after/during
+- public/private
+
+index page of highest rated books, most read books
+
+book page, list of user ratings/reviews/notes
+- book goal
+
+
+
 FINAL PROJECT IDEAS
 - idk lol
 - Balisong tricks database
