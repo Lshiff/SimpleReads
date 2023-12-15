@@ -1,0 +1,44 @@
+.books-container {
+    margin: 40px auto;
+    /* background-color: lightgreen; */
+    width: max-content;
+}
+
+.book-container {
+    margin: 50px;
+    width: 400px;
+    height: 200px;
+    background-color: lightcyan;
+    position: relative;
+    display: flex;
+}
+.book-container img {
+    height: 100%;
+}
+
+.text-container {
+    margin-left: 10px;
+}
+
+.book-title {
+    font-size: 1.75em;
+    font-weight: bold;
+    color: blue;
+}
+
+.book-author {
+    font-size: 1.25em;
+    color: blueviolet;
+}
+
+.book-fictionality {
+    color: gray;
+    /* position: absolute;
+    bottom: 0;
+    left: 0; */
+}
+.book-library {
+    position: absolute;
+    top: 0;
+    right: 0;
+}

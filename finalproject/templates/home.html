@@ -2,14 +2,16 @@
 
 {% block title %}Home{% endblock title %}
 
+{% set active_page = 'home' %}
 
 {% block content %}
 
 
 <a href="{{ url_for('add_book')}}">Add book</a>
+<br>
+<a href="{{ url_for('list_books')}}">List Books</a>
 
 
-hi lol
 
 
 

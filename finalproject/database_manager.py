@@ -33,6 +33,10 @@ class DatabaseManager:
             db.session.commit()
         return book
 
+    @staticmethod
+    def get_all_books():
+        return db.session.execute(db.select(Book)).scalars()
+
 
 if __name__ == "__main__":
     print("maion creating book")

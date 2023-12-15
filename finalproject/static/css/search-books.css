@@ -1,0 +1,81 @@
+.search {
+    margin: 50px 200px;
+    width: 300px;
+}
+
+/* .searchbox {
+    margin: 50px;
+} */
+#searchbar {
+    width: 225px;
+}
+#submit {
+    float:right
+}
+#results-div {
+    width: 300px;
+    background-color: lightblue;
+    height: 400px;
+    overflow: scroll;
+    border: 1px solid black;
+}
+
+.book-container {
+    /* margin-bottom: 20px; */
+    border: 1px solid black;
+    background-color: lightcyan;
+    height: 100px;
+    width: 298px;
+    display: flex;
+}
+
+.book-container:hover {
+    background-color: rgb(181, 229, 229);
+}
+
+.book-cover-container {
+    height: 100%;
+    flex: 0 0 100px;
+    /* width: 100px; */
+    display: flex;
+    align-items: center;
+}
+.book-cover {
+    padding: 10px;
+    box-sizing: border-box;
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+}
+.book-text {
+    margin-left: 20px;
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+
+}
+.book-text p {
+    margin: 0;
+}
+.book-title {
+    color: blueviolet;
+    font-size: 1.15em;
+    /* max-height: 50px; */
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    /* display: -webkit-box; */
+    /* -webkit-line-clamp: 2; */
+    /* -webkit-box-orient: vertical; */
+    flex: 0 1 45px;
+}
+.author-container {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+}
+.book-author {
+    font-size: 0.85em;
+    color: blue;
+    /* margin: auto 0; */
+}

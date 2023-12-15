@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Search Books
+{% endblock title %}
+
+{% block head %}
+    <link rel="stylesheet" href='{{ url_for("static", filename="css/search-books.css") }}'>
+{% endblock head %}
+
+
+{% set active_page = 'search_books' %}
+
+{% block content %}
+    
+    <div class="search">
+
+        <div class="searchbox">
+            <form method="post" autocomplete="off">
+                <input id="searchbar" type="text" name="searchbox" placeholder="Search for a book" oninput="liveSearch()" value="percy jackson and the Singer of Apollo">
+                <button id="submit" type="submit">Search</button>
+            </form>
+        </div> 
+
+        <div id="results-div">
+            
+        </div>
+
+    </div>
+
+<script>
+
+function liveSearch(searchbar) {
+    console.log("livesarch")
+    searchQuery = $('#searchbar').val()
+    console.log(searchQuery)
+    //$('#results').text(searchQuery)
+    $.ajax({
+        url: 'https://openlibrary.org/search.json',
+        data: {'q': searchQuery, 'fields': 'title,author_name,first_sentence,cover_edition_key', 'sort': 'rating'},
+        
+        success: function(response) {
+            console.log(response)
+            showResults(response)
+        },
+        error: function(xhr) {
+            console.log(xhr)
+        }
+    })
+    
+}
+
+function showResults(response) {
+    response = response['docs']
+    allDoseDeets = ""
+    for(let i = 0; i < response.length; i++) {
+        console.log(response[i])
+        book = response[i]
+        deets = ""
+        if (book['cover_edition_key']) {
+            deets += `<div class="book-cover-container"><img class="book-cover" alt="Book Cover" src="https://covers.openlibrary.org/b/olid/${book['cover_edition_key']}-M.jpg"></div>`
+        }
+        deets +=`
+            <div class="book-text">
+                <p class="book-title">${book['title']}</p>
+                <div class="author-container">
+                    <p class="book-author">${book['author_name']}</p>
+                </div>
+            </div>
+        `
+        
+        p = `<div class="book-container"> ${deets}</div>`
+        console.log(deets)
+        allDoseDeets += p
+    }
+    $('#results-div').html(allDoseDeets)
+}
+
+    $( document ).ready(function () {liveSearch()})
+    //liveSearch()
+
+</script>
+
+
+
+{% endblock content %}

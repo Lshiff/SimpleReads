@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Search Books
+{% endblock title %}
+
+{% block head %}
+    <link rel="stylesheet" href='{{ url_for("static", filename="css/search-result.css") }}'>
+{% endblock head %}
+
+
+{% set active_page = 'search_books' %}
+
+{% block content %}
+    
+    <div class="books-container">
+    
+        {% for book in books %}
+            <div class="book-container">
+                {% if book.cover %}
+                    <div class="book-cover-container">
+                        <img src="{{ book.cover }}" class="book-cover">
+                    </div>
+                {% endif %}
+
+                <div class="book-text">
+                    <span class="book-title">
+                        {{ book.title }}
+                    </span>
+
+                    <br>
+
+                    <span class="book-author">
+
+                        {% if book.author %}
+                            {% if book.author|length > 1 %}
+                            {% set num_authors = book.author|length %}
+                                by 
+                                {% for i in range(num_authors) %}
+                                    {{ book.author[i] }}
+                                    {% if i + 1 < num_authors %}
+                                        ,
+                                    {% endif %}
+                                {% endfor %}
+    
+                            {% else %}
+                                by {{ book.author[0] }}
+                            {% endif %}
+
+                        {% endif %}
+
+                            
+                        
+                        
+                    </span>
+                </div>
+            </div>
+
+
+        {% endfor %}
+    
+    
+    </div>
+
+
+{% endblock content %}

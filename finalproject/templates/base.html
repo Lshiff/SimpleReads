@@ -5,18 +5,29 @@
     <title>{% block title %}{% endblock title %}</title>
 
     {# <link rel="stylesheet" href="{{ url_for('static', filename='css/{% block css %}{% endblock css %}.css) }}"> #}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
 
     {% block head %}
 
     {% endblock head %} 
     
+    <script src='{{ url_for("static", filename="js/jquery.js") }}'></script>
 
 
 </head>
 <body>
 
+    <header class="header">
+        
+        <nav class="navbar">
 
+            <a class="nav-item {{ 'active' if active_page == 'home' else '' }}" href="{{ url_for('home') }}">Home</a>
+            <a class="nav-item {{ 'active' if active_page == 'add_book' else '' }}" href="{{ url_for('add_book') }}">Add Books</a>
+            <a class="nav-item {{ 'active' if active_page == 'list_books' else '' }}" href="{{ url_for('list_books') }}">List Books</a>
+            <a class="nav-item {{ 'active' if active_page == 'search_books' else '' }}" href="{{ url_for('search_books') }}">Search Books</a>
 
+            </nav>
+    </header>
 
     {% block content %}
 
@@ -27,7 +38,8 @@
 
 
 
-
+{# <script src='{{ url_for("static", filename="js/jquery.js") }}'></script>
+<script src='{{ url_for("static", filename="js/jquery.quickfit.js") }}'></script> #}
 
 </body>
 </html>

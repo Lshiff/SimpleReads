@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}List Books{% endblock title %}
+
+{% set active_page = 'list_books' %}
+
+{% block head %}
+    <link rel="stylesheet" href='{{ url_for("static", filename="css/list-books.css") }}'>
+{% endblock head %} 
+
+{% block content %}
+
+Hello these are books
+
+<div class="books-container">
+
+    {% for book in books %}
+
+        <div class="book-container">
+
+            <div id="img-container">
+                <img src="https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1400602609i/28187.jpg">
+            </div>
+
+            <div class="text-container">
+                <span class="book-title">
+                    {{ book.title }}
+                </span>
+
+                <br>
+
+                <span class="book-author">
+                    by {{ book.author }}
+                </span>
+
+                <br>
+
+                <span class="book-fictionality">
+                    {{ book.fictionality }}
+                </span>
+
+                <span class="book-library">
+                    {{ book.library }}
+                </span>
+            </div>
+
+        </div>
+        
+    {% endfor %}
+
+
+</div>
+
+
+{% endblock content %}
+
