@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock title %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/forms.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+{% endblock head %}
+
+
+
+{% block content %}
+
+    <div class="form-container">
+        <h3 class="title">Log in</h3>
+
+        <form method="POST">
+            {{ form.csrf_token }}
+
+            <p class="form-username-or-email">
+                {{ form.username_or_email.label }} 
+                {{ form.username_or_email() }} 
+            </p>
+
+            {% if form.username_or_email.errors %}
+                <ul class="errors">
+                    {% for error in form.username_or_email.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+
+            <p class="form-password">
+                {{ form.password.label }} 
+                {{ form.password() }} 
+            </p>
+
+            {% if form.password.errors %}
+                <ul class="errors">
+                    {% for error in form.password.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+
+            <p>
+                <input class="submit-button" type="submit" value="Log in">
+            </p>
+        </div>
+    
+
+<script>
+
+
+</script>
+
+
+
+{% endblock content %}

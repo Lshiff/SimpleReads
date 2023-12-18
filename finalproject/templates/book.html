@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <link rel="stylesheet" href='{{ url_for("static", filename="css/book.css") }}'>
+{% endblock head %}
+
+{% block title %}
+Book - 
+{% endblock title %}
+
+{% block content %}
+
+
+<div class="book-container">
+    <div class="book-cover"></div>
+    <div class="book-text">
+        <p class="book-title"></p>
+        <p class="book-author"></p>
+        <p class="book-description" ></p>
+        <button class="add-book-button" onclick="addBookRequest()">Add Book</button>
+    </div>
+</div>
+
+
+
+
+<script>
+
+    
+
+let olid = "{{ olid }}"
+
+function addBookRequest() {
+
+    let data = { olid: olid}
+    $.ajax({
+        type: 'POST',
+        url: '/add-olbook',
+        contentType: 'application/json;charset=UTF-8',
+        data: JSON.stringify(data),
+        success: function(response) {
+            console.log('Response from server:', response);
+            window.location.href = response
+        },
+        error: function(xhr, status, error) {
+            console.error('Error sending data', error);
+        }
+
+    })
+
+
+
+
+
+    //$.post('/add-olbook', (data))
+    //$.post('/add-olbook', JSON.stringify(data))
+}
+
+
+
+$.ajax({
+    url: `https://openlibrary.org/works/${olid}.json`,
+    
+    success: function(response) {
+        console.log(response)
+        updatePage(response)
+        //showResults(response)
+    },
+    error: function(xhr) {
+        console.log(xhr)
+    }
+})
+
+function updatePage(response) {
+    let title = response['title']
+    let description = response['description']
+    if (typeof description === 'object') {description = description['value']}
+    let underscored_title = title.split(" ").join("_")
+    history.pushState({}, null, `/book/${olid}/${underscored_title}`)
+    document.title = title
+    $('.book-title').text(title)
+    $('.book-description').text(description)
+    $('#all').text(response)
+
+    let cover = response['covers'][0]
+    img = `<img src="https://covers.openlibrary.org/b/id/${cover}-L.jpg">`
+    $('.book-cover').append(img)
+
+
+//    for (cover of response['covers']) {
+        //img = `<img src="https://covers.openlibrary.org/b/id/${cover}-L.jpg">`
+        //$('.book-cover').append(img)
+
+    //}
+
+    console.log(response)
+    updateAuthor(response)
+
+
+
+}
+
+
+function getAuthors(response) {
+
+    console.log("author text fucntion")
+
+    const names = []
+    console.log(response)
+    console.log(response['authors'])
+    for (authorDict of response['authors']) {
+        key = authorDict['author']['key']
+        //console.log(key)
+
+        const promise = fetch(`https://openlibrary.org${key}.json`)
+            .then(response => response.json())
+            .then(data => {
+                return data['name']
+            })
+
+        names.push(promise)
+    }
+
+    allNames = Promise.all(names)
+    console.log("all names", allNames)
+    return allNames
+    //for (name of allNames) {console.log(name)}
+}
+
+
+function updateAuthor(response) {
+    console.log("fun t")
+    authors = getAuthors(response)
+        .then(names => {
+            //console.log("authors from authrotext", authors)
+            console.log("joined", names.join(", "))
+        //    return names
+            let authors = names[0]
+            console.log("authors", authors)
+            if (names.length > 1) {
+                if (names.length > 2) {
+                    authors += ", "
+                } else {
+                    authors += " "
+                }
+                for (let i = 1; i < names.length-1; i++) {
+                    authors += `${names[i]}, `
+                }
+                authors += `and ${names[names.length-1]}`
+            }
+
+            let authText = "By " + authors
+            console.log(authText)
+            $('.book-author').text(authText)
+            return authText
+            })
+            .catch(error => {
+                console.error("Error me", error)
+            })
+}
+
+        //$.get(`https://openlibrary.org${key}.json`, function(authResponse) {
+            //console.log(authResponse)
+            //console.log(authResponse['name'])
+         //   names.push(String(authResponse['name']))
+
+        //})
+
+
+            //console.log("names: ", names)
+
+
+    
+
+
+
+
+
+</script>
+
+
+{% endblock content %}

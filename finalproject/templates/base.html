@@ -12,6 +12,7 @@
     {% endblock head %} 
     
     <script src='{{ url_for("static", filename="js/jquery.js") }}'></script>
+    <script src='{{ url_for("static", filename="js/clamp.js") }}'></script>
 
 
 </head>
@@ -25,9 +26,29 @@
             <a class="nav-item {{ 'active' if active_page == 'add_book' else '' }}" href="{{ url_for('add_book') }}">Add Books</a>
             <a class="nav-item {{ 'active' if active_page == 'list_books' else '' }}" href="{{ url_for('list_books') }}">List Books</a>
             <a class="nav-item {{ 'active' if active_page == 'search_books' else '' }}" href="{{ url_for('search_books') }}">Search Books</a>
+            {% if current_user.is_anonymous %}
+            <a class="nav-item {{ 'active' if active_page == 'login' else '' }}" href="{{ url_for('login') }}">Log in</a>
+            <a class="nav-item {{ 'active' if active_page == 'register' else '' }}" href="{{ url_for('register') }}">Register</a>
+            {% else %}
+            <a class="nav-item {{ 'active' if active_page == 'logout' else '' }}" href="{{ url_for('logout') }}">Log Out</a>
+            {% endif %}
 
             </nav>
     </header>
+
+    <div>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+
+        </ul>
+        {% endif %}
+        {% endwith %}
+
+    </div>
 
     {% block content %}
 

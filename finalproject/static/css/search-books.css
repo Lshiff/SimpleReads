@@ -16,6 +16,8 @@
     width: 300px;
     background-color: lightblue;
     height: 400px;
+    /* height: max-content; */
+    /* max-height: 400px; */
     overflow: scroll;
     border: 1px solid black;
 }
@@ -48,8 +50,9 @@
     object-fit: contain;
 }
 .book-text {
-    margin-left: 20px;
-    margin: 10px;
+    margin: 15px 10px 10px 10px;
+    /* margin-left: 20px; */
+    /* margin: 10px; */
     display: flex;
     flex-direction: column;
 
@@ -60,14 +63,6 @@
 .book-title {
     color: blueviolet;
     font-size: 1.15em;
-    /* max-height: 50px; */
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    /* display: -webkit-box; */
-    /* -webkit-line-clamp: 2; */
-    /* -webkit-box-orient: vertical; */
-    flex: 0 1 45px;
 }
 .author-container {
     flex-grow: 1;
@@ -79,3 +74,10 @@
     color: blue;
     /* margin: auto 0; */
 }
+
+/* ::-webkit-scrollbar { */
+/*     width: 5px */
+/* } */
+
+
+

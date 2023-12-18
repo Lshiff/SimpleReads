@@ -17,7 +17,7 @@
 
         <div class="searchbox">
             <form method="post" autocomplete="off">
-                <input id="searchbar" type="text" name="searchbox" placeholder="Search for a book" oninput="liveSearch()" value="percy jackson and the Singer of Apollo">
+                <input id="searchbar" type="search" name="searchbox" placeholder="Search for a book" oninput="liveSearch()" value="The Dark Prophecy">
                 <button id="submit" type="submit">Search</button>
             </form>
         </div> 
@@ -33,14 +33,14 @@
 function liveSearch(searchbar) {
     console.log("livesarch")
     searchQuery = $('#searchbar').val()
-    console.log(searchQuery)
+    //console.log(searchQuery)
     //$('#results').text(searchQuery)
     $.ajax({
         url: 'https://openlibrary.org/search.json',
-        data: {'q': searchQuery, 'fields': 'title,author_name,first_sentence,cover_edition_key', 'sort': 'rating'},
+        data: {'q': searchQuery, 'fields': 'key,title,author_name,first_sentence,cover_edition_key', 'limit': 25, 'sort': 'rating', },
         
         success: function(response) {
-            console.log(response)
+            //console.log(response)
             showResults(response)
         },
         error: function(xhr) {
@@ -54,30 +54,71 @@ function showResults(response) {
     response = response['docs']
     allDoseDeets = ""
     for(let i = 0; i < response.length; i++) {
-        console.log(response[i])
+        //console.log(response[i])
         book = response[i]
-        deets = ""
+        deets = '<div class="book-cover-container">'
         if (book['cover_edition_key']) {
-            deets += `<div class="book-cover-container"><img class="book-cover" alt="Book Cover" src="https://covers.openlibrary.org/b/olid/${book['cover_edition_key']}-M.jpg"></div>`
+            deets += `<img class="book-cover" alt="Book Cover" src="https://covers.openlibrary.org/b/olid/${book['cover_edition_key']}-M.jpg">`
         }
+        deets += '</div>'
+
+        console.log(book['author_name'])
+
+        let auth = book['author_name']
+        var realauth
+        if (!auth) {realauth = ""}
+        if (auth && auth.length > 1) {
+            realauth = auth[0]
+            if (auth.length > 2) {
+                realauth += ", "
+            } else {
+                realauth += " "
+            }
+            for (let i = 1; i < auth.length-1; i++) {
+                realauth += `${auth[i]}, `
+            }
+            realauth += `and ${auth[auth.length-1]}`
+        } else {realauth = auth}
+        console.log(auth, realauth)
+        auth = realauth
+
+        authText = "By " + auth
+        if (!auth) {authText = ""}
+
         deets +=`
             <div class="book-text">
                 <p class="book-title">${book['title']}</p>
                 <div class="author-container">
-                    <p class="book-author">${book['author_name']}</p>
+                    <p class="book-author">${authText}</p>
                 </div>
             </div>
         `
-        
-        p = `<div class="book-container"> ${deets}</div>`
-        console.log(deets)
+        let olid=book['key'].split('/works/')[1] 
+        bookUrl = {{ url_for('book_page', olid='') }} + olid
+        p = `<div class="book-container" onclick="window.location.href='${bookUrl}'"> ${deets}</div>`
+        //console.log(deets)
         allDoseDeets += p
     }
     $('#results-div').html(allDoseDeets)
+    clampAll()
 }
 
     $( document ).ready(function () {liveSearch()})
-    //liveSearch()
+
+function clampAll() {
+    const titles = document.querySelectorAll('.book-title')
+    for(title of titles) {
+        //console.log(title)
+        $clamp(title, {clamp: 2})
+    }
+    const authors = document.querySelectorAll('.book-author')
+    for(author of authors) {
+        //console.log(title)
+        $clamp(author, {clamp: 2})
+    }
+}
+
+
 
 </script>
 

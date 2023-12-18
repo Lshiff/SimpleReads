@@ -1,0 +1,20 @@
+.book-container {
+    width: 800px;
+    margin: 50px auto;
+    display: flex;
+    gap: 50px;
+}
+.book-cover {
+    /* width: 400px; */
+    /* height: 400px; */
+}
+.book-text {
+    /* width: max-content; */
+}
+.book-title {
+    color: blueviolet;
+    font-size: 1.5em;
+}
+.book-author {
+    color: blue;
+}

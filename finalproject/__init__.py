@@ -1,6 +1,8 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase
+from flask_login import LoginManager
+from flask_bcrypt import Bcrypt
 
 from dotenv import load_dotenv
 import os
@@ -21,5 +23,10 @@ class Base(DeclarativeBase):
 
 db = SQLAlchemy(model_class=Base)
 db.init_app(app)
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+bcrypt = Bcrypt(app)
 
 from finalproject import routes

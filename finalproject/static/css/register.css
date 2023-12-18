@@ -1,0 +1,3 @@
+.form-display-name input:valid {
+    background-color: green;
+}
