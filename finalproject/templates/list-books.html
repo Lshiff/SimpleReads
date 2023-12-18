@@ -10,16 +10,15 @@
 
 {% block content %}
 
-Hello these are books
 
 <div class="books-container">
 
-    {% for book in books %}
+    {% for book in olbooks %}
 
-        <div class="book-container">
+        <div class="book-container" onclick="window.location.href = `/book/{{ book.olid }}`">
 
             <div id="img-container">
-                <img src="https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1400602609i/28187.jpg">
+                <img src="https://covers.openlibrary.org/b/id/{{ book.cover_id }}-M.jpg">
             </div>
 
             <div class="text-container">

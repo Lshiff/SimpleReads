@@ -62,10 +62,24 @@ class DatabaseManager:
             db.session.commit()
         return user
 
+    @staticmethod
+    def remove_user_book_connection(user_id, book_olid):
+        # ubc = UserBookConnection.query.filter_by(user_id=user_id).filter_by(book_olid=book_olid).first()
+        ubc = db.session.query(UserBookConnection).filter(UserBookConnection.user_id == user_id).filter(UserBookConnection.book_olid == book_olid).first()
+        if not ubc:
+            print("bad ubc")
+            return False
+        db.session.delete(ubc)
+        db.session.commit()
+        # with app.app_context():
 
     @staticmethod
     def get_all_books():
         return db.session.execute(db.select(Book)).scalars()
+
+    # @staticmethod
+    # def get_user_books(user_id):
+    #     return UserBookConnection.query.filter_by(user_id=user_id).all()
 
     @staticmethod
     def olbook_exists(olid):
@@ -80,6 +94,10 @@ class DatabaseManager:
         if ubc:
             return True
         return False
+
+    @staticmethod
+    def ubc_exists(user_id, olid):
+        return DatabaseManager.user_book_connection_exists(user_id, olid)
 
     @staticmethod
     def get_user_by_id(id: int) -> Optional[User]:

@@ -136,12 +136,12 @@ def logout():
 
 @app.route("/book/<olid>")
 def book_page(olid):
-    return render_template("book.html", olid=olid)
+    return render_template("book.html", olid=olid, dbm = DatabaseManager)
 
 @app.route("/book/<olid>/<book_title>")
 def book_page_redirect(olid, book_title):
 
-    return render_template("book.html", olid=olid)
+    return redirect(url_for("book_page", olid=olid))
 
 
 
@@ -191,11 +191,35 @@ def search_books():
     return render_template("search-books.html")
 
 @app.route("/list-books")
+@login_required
 def list_books():
-    books = DatabaseManager.get_all_books()
-    return render_template("list-books.html", books=books)
+    # user_books_olids = DatabaseManager.get_user_books(current_user.id)
+
+    connections = current_user.connections
+    olbooks = [connection.olbook for connection in connections] 
+
+    return render_template("list-books.html", olbooks = olbooks)
 
 #POST METHOD FORM
+
+@app.route("/remove-olbook", methods=['POST'])
+def remove_olbook():
+
+    olid = request.json.get('olid')
+
+    if current_user.is_anonymous:
+        print("somethingis probably pretty wrong here")
+        return f"/login?next=book/{olid}"
+
+    if not DatabaseManager.user_book_connection_exists(current_user.id, olid):
+        print("you do't have this book, smth wrong")
+        flash("you don't have that book lol")
+        return url_for('book_page', olid=olid)
+
+    DatabaseManager.remove_user_book_connection(current_user.id, olid)
+    flash("Book has been removed")
+    return '/list-books'
+
 
 
 @app.route("/add-olbook", methods=['POST'])

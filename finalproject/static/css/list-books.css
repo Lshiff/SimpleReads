@@ -12,6 +12,9 @@
     position: relative;
     display: flex;
 }
+.book-container:hover {
+    background-color: lightblue;
+}
 .book-container img {
     height: 100%;
 }
