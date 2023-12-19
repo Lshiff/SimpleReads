@@ -1,15 +1,64 @@
 .book-container {
-    width: 800px;
+    /* width: 800px; */
+    max-width: 800px;
+    max-width: 80%;
     margin: 50px auto;
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    /* grid-template-columns: repeat(3, 200px); */
+    /* grid-template-columns: 200px 400px 200px; */
+    /* grid-template-columns: repeat(2, 1fr); */
+    /* grid-template-columns: 200px 1fr; */
     gap: 50px;
 }
+
+/* @media */
+.button {
+    width: 100%;
+}
+.alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    padding: 10px;
+}
+.button-confirm-wrapper {
+    display: flex;
+    gap: 10px;
+}
+.button.confirm {
+    margin-top: 0;
+    /* width: 40%; */
+}
+#notes-textarea {
+    width: 100%;
+    resize: none;
+}
+.alert {
+    padding: 0.75rem 1.25rem;
+    border: 1px solid transparent;
+    border-radius: 0.25rem;
+    text-align: center
+}
+.alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    margin-bottom: 0;
+}
 .book-cover {
+    width: 100%;
     /* width: 400px; */
     /* height: 400px; */
 }
+#book-cover-img {
+    width: 100%;
+}
 .book-text {
+    overflow: hidden;
     /* width: max-content; */
+    /* max-width: 100%; */
 }
 .book-title {
     color: blueviolet;
@@ -17,4 +66,20 @@
 }
 .book-author {
     color: blue;
+}
+.book-description {
+    /* width: 100%; */
+    /* max-height: 5em; */
+    /* clip-path: inset(0 0 0 0); */
+    transition: max-height 1s;
+    /* text-overflow: ellipsis; */
+    /* -webkit-box-orient: vertical; */
+    /* display: -webkit-box; */
+    /* -webkit-line-clamp: 2; */
+}
+.book-description:hover {
+    max-height: 1000px;
+    -webkit-box-orient: vertical;
+    display: block;
+    -webkit-line-clamp: 2;
 }

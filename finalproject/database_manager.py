@@ -63,6 +63,16 @@ class DatabaseManager:
         return user
 
     @staticmethod
+    def save_notes(user_id, book_olid, note_text):
+        ubc = db.session.query(UserBookConnection).filter(UserBookConnection.user_id == user_id).filter(UserBookConnection.book_olid == book_olid).first()
+        if not ubc:
+            print(f"No UBC found for {user_id} and {book_olid}, couldnt add note {note_text[0:500]}")
+            return "Bad lol"
+        ubc.note = note_text
+        db.session.add(ubc)
+        db.session.commit()
+
+    @staticmethod
     def remove_user_book_connection(user_id, book_olid):
         # ubc = UserBookConnection.query.filter_by(user_id=user_id).filter_by(book_olid=book_olid).first()
         ubc = db.session.query(UserBookConnection).filter(UserBookConnection.user_id == user_id).filter(UserBookConnection.book_olid == book_olid).first()
@@ -130,6 +140,25 @@ class DatabaseManager:
         if user:
             return True
         return False
+
+
+    @staticmethod
+    def get_ubc(user_id, book_olid):
+        ubc = UserBookConnection.query.filter_by(user_id=user_id).filter_by(book_olid=book_olid).first()
+        if not ubc:
+            return None
+        return ubc
+
+    @staticmethod
+    def get_note(user_id, book_olid):
+        ubc = DatabaseManager.get_ubc(user_id, book_olid)
+        if not ubc:
+            return ""
+        if not ubc.note:
+            return ""
+        print("got", ubc.note)
+        return ubc.note
+
 
 
 

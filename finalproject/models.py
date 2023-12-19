@@ -39,6 +39,7 @@ class UserBookConnection(db.Model):
     __tablename__ = "user_book_connections"
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), primary_key=True)
     book_olid: Mapped[str] = mapped_column(ForeignKey("olbooks.olid"), primary_key=True)
+    note: Mapped[str] = mapped_column(String(100000), nullable=True)
 
     olbook: Mapped["OLBook"] = relationship()
 

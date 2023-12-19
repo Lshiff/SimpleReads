@@ -33,6 +33,7 @@
 
 .book-container:hover {
     background-color: rgb(181, 229, 229);
+    cursor: pointer;
 }
 
 .book-cover-container {

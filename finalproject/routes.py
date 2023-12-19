@@ -115,7 +115,7 @@ def login():
             return render_template("login.html", form=form)
 
         login_user(user)
-        flash("Correct!, logged in")
+        # flash("Correct!, logged in")
         next_page = request.args.get('next')
         print("next page", next_page)
 
@@ -136,7 +136,11 @@ def logout():
 
 @app.route("/book/<olid>")
 def book_page(olid):
-    return render_template("book.html", olid=olid, dbm = DatabaseManager)
+    if current_user.is_authenticated and DatabaseManager.ubc_exists(current_user.id, olid):
+        user_note = DatabaseManager.get_note(current_user.id, olid)
+    else:
+        user_note = ""
+    return render_template("book.html", olid=olid, user_note=user_note, dbm = DatabaseManager)
 
 @app.route("/book/<olid>/<book_title>")
 def book_page_redirect(olid, book_title):
@@ -217,7 +221,7 @@ def remove_olbook():
         return url_for('book_page', olid=olid)
 
     DatabaseManager.remove_user_book_connection(current_user.id, olid)
-    flash("Book has been removed")
+    # flash("Book has been removed")
     return '/list-books'
 
 
@@ -243,7 +247,7 @@ def add_olbook():
         return '/list-books'
 
     DatabaseManager.create_user_book_connection(current_user.id,olid)
-    flash("Book has been added")
+    # flash("Book has been added")
     return '/list-books'
 
 def add_to_olbooks(olid):
@@ -323,3 +327,32 @@ def add_book():
         """
 
     return render_template("add-book.html")
+
+@app.route("/save-notes", methods = ['POST'])
+def save_notes():
+    if current_user.is_anonymous:
+        print("anon user")
+        return("no user logged in")
+
+    olid = request.json.get('olid')
+    note = request.json.get('note')
+
+
+    if not DatabaseManager.ubc_exists(current_user.id, olid):
+        print("not added")
+        return("Book not added")
+
+    print("Incoming note:", note)
+
+    DatabaseManager.save_notes(current_user.id, olid, note)
+
+    return "got it: " + note
+
+
+
+
+
+
+
+
+
