@@ -16,12 +16,17 @@ nav {
     display: flex;
 }
 .nav-item{
-    padding: 20px 0 20px 40px;
+    /* padding: 20px 0 20px 40px; */
+    padding: 20px;
     height: 100%;
     width: 150px;
     font-size: 1.5em;
     /* background-color: red */
     color: black;
+    text-align: center;
+}
+.right {
+    margin-left: auto;
 }
 .nav-item:last-child {
     padding-right: 20px;
@@ -57,4 +62,113 @@ nav {
     color: black;
     background-color: #1d6e6a;
     border-color: #1d6e6a;
+}
+
+.navbar-search {
+    /* margin-left: auto; */
+    /* margin-inline: auto; */
+    display: flex;
+    align-items: center;
+}
+.search {
+    /* margin: 50px 200px; */
+    width: 300px;
+}
+.searchbox {
+    /* margin-top: 20px; */
+    height: 35px;
+}
+#search-form {
+    height: 100%;
+    height: 35px;
+}
+#searchbar {
+    padding: 5px;
+    border-radius: 5px;
+    border-color: black;
+    width: 225px;
+    height: 100%;
+}
+
+#submit {
+    margin-left: 10px;
+    float:right;
+    height: 100%;
+    border-radius: 5px;
+}
+.clip-mask {
+    width: 300px;
+    height: 400px;
+    position: absolute;
+    top: 57px;
+    background-color: lightgray;
+    border-radius: 5px;
+    overflow: hidden;
+}
+#results-div {
+    position: absolute;
+    top: 57px;
+    width: 300px;
+    background-color: lightblue;
+    height: 400px;
+    /* height: max-content; */
+    /* max-height: 400px; */
+    overflow: scroll;
+    border: 1px solid black;
+    border-radius: 5px;
+    z-index: 1;
+}
+
+.search-book-container {
+    /* margin-bottom: 20px; */
+    border: 1px solid black;
+    background-color: lightcyan;
+    height: 100px;
+    width: 298px;
+    display: flex;
+}
+
+.search-book-container:hover {
+    background-color: rgb(181, 229, 229);
+    cursor: pointer;
+}
+
+.search-book-cover-container {
+    height: 100%;
+    flex: 0 0 100px;
+    /* width: 100px; */
+    display: flex;
+    align-items: center;
+}
+.search-book-cover {
+    padding: 10px;
+    box-sizing: border-box;
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+}
+.search-book-text {
+    margin: 15px 10px 10px 10px;
+    /* margin-left: 20px; */
+    /* margin: 10px; */
+    display: flex;
+    flex-direction: column;
+
+}
+.search-book-text p {
+    margin: 0;
+}
+.search-book-title {
+    color: blueviolet;
+    font-size: 1.15em;
+}
+.search-author-container {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+}
+.search-book-author {
+    font-size: 0.85em;
+    color: blue;
+    /* margin: auto 0; */
 }

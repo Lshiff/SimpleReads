@@ -7,14 +7,14 @@
     {# <link rel="stylesheet" href="{{ url_for('static', filename='css/{% block css %}{% endblock css %}.css) }}"> #}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
 
-    {% block head %}
-
-    {% endblock head %} 
     
     <script src='{{ url_for("static", filename="js/jquery.js") }}'></script>
     <script src='{{ url_for("static", filename="js/clamp.js") }}'></script>
     <script src='{{ url_for("static", filename="js/jquery.dirty.js") }}'></script>
 
+    {% block head %}
+
+    {% endblock head %} 
 
 </head>
 <body>
@@ -24,14 +24,34 @@
         <nav class="navbar">
 
             <a class="nav-item {{ 'active' if active_page == 'home' else '' }}" href="{{ url_for('home') }}">Home</a>
-            <a class="nav-item {{ 'active' if active_page == 'add_book' else '' }}" href="{{ url_for('add_book') }}">Add Books</a>
+            <!-- <a class="nav-item {{ 'active' if active_page == 'add_book' else '' }}" href="{{ url_for('add_book') }}">Add Books</a> -->
             <a class="nav-item {{ 'active' if active_page == 'list_books' else '' }}" href="{{ url_for('list_books') }}">List Books</a>
-            <a class="nav-item {{ 'active' if active_page == 'search_books' else '' }}" href="{{ url_for('search_books') }}">Search Books</a>
+            <!-- <a class="nav-item {{ 'active' if active_page == 'search_books' else '' }}" href="{{ url_for('search_books') }}">Search Books</a> -->
+
+    
+            <div class="navbar-search right">
+
+                <div class="searchbox">
+                    <form method="post" id="search-form" autocomplete="off">
+                        <input id="searchbar" type="search" name="searchbox" placeholder="Search for a book" oninput="liveSearch()" value="Percy Jackson">
+                        <button id="submit" type="submit">Search</button>
+                    </form>
+                </div> 
+
+                <!-- <div class="clip-mask"> -->
+                    <div id="results-div">
+                        
+                    </div>
+                <!-- </div> -->
+
+            </div>
+
+
             {% if current_user.is_anonymous %}
-            <a class="nav-item {{ 'active' if active_page == 'login' else '' }}" href="{{ url_for('login') }}">Log in</a>
-            <a class="nav-item {{ 'active' if active_page == 'register' else '' }}" href="{{ url_for('register') }}">Register</a>
+            <a class="nav-item  {{ 'active' if active_page == 'login' else '' }}" href="{{ url_for('login') }}">Log in</a>
+            <a class="nav-item  {{ 'active' if active_page == 'register' else '' }}" href="{{ url_for('register') }}">Register</a>
             {% else %}
-            <a class="nav-item {{ 'active' if active_page == 'logout' else '' }}" href="{{ url_for('logout') }}">Log Out</a>
+            <a class="nav-item right {{ 'active' if active_page == 'logout' else '' }}" href="{{ url_for('logout') }}">Log Out</a>
             {% endif %}
 
             </nav>
@@ -62,6 +82,133 @@
 
 {# <script src='{{ url_for("static", filename="js/jquery.js") }}'></script>
 <script src='{{ url_for("static", filename="js/jquery.quickfit.js") }}'></script> #}
+<script>
+
+
+$('#results-div').hide()
+$('#searchbar').on("focusout", function() {
+    setTimeout(() => {
+        $('#results-div').hide()
+    }, 100)
+//    $('#results-div').hide()
+})
+$('#searchbar').on("focusin", function() {
+    $('#results-div').show()
+})
+
+$(document).on('keypress', function(event) {
+    if (event.which === 47) {
+        searchBox = $('#searchbar')
+        val = searchBox.val()
+        searchBox.focus()
+        length = searchBox.val().length
+        searchBox[0].setSelectionRange(length, length)
+
+        setTimeout(function() {
+            searchBox.val(searchBox.val().slice(0,-1))
+        }, 0)
+
+    }
+})
+
+function liveSearch(searchbar) {
+    console.log("livesarch")
+    searchQuery = $('#searchbar').val()
+    //console.log(searchQuery)
+    //$('#results').text(searchQuery)
+    $.ajax({
+        url: 'https://openlibrary.org/search.json',
+        data: {'q': searchQuery, 'fields': 'key,title,author_name,first_sentence,cover_edition_key', 'limit': 25, 'sort': 'rating', },
+        
+        success: function(response) {
+            //console.log(response)
+            showResults(response)
+        },
+        error: function(xhr) {
+            console.log(xhr)
+        }
+    })
+    
+}
+
+function showResults(response) {
+    response = response['docs']
+    allDoseDeets = ""
+    for(let i = 0; i < response.length; i++) {
+        //console.log(response[i])
+        book = response[i]
+        deets = '<div class="search-book-cover-container">'
+        if (book['cover_edition_key']) {
+            deets += `<img class="search-book-cover" alt="Book Cover" src="https://covers.openlibrary.org/b/olid/${book['cover_edition_key']}-M.jpg">`
+        }
+        deets += '</div>'
+
+        console.log(book['author_name'])
+
+        let auth = book['author_name']
+        var realauth
+        if (!auth) {realauth = ""}
+        if (auth && auth.length > 1) {
+            realauth = auth[0]
+            if (auth.length > 2) {
+                realauth += ", "
+            } else {
+                realauth += " "
+            }
+            for (let i = 1; i < auth.length-1; i++) {
+                realauth += `${auth[i]}, `
+            }
+            realauth += `and ${auth[auth.length-1]}`
+        } else {realauth = auth}
+        console.log(auth, realauth)
+        auth = realauth
+
+        authText = "By " + auth
+        if (!auth) {authText = ""}
+
+        deets +=`
+            <div class="search-book-text">
+                <p class="search-book-title">${book['title']}</p>
+                <div class="search-author-container">
+                    <p class="search-book-author">${authText}</p>
+                </div>
+            </div>
+        `
+        let olid=book['key'].split('/works/')[1] 
+        bookUrl = {{ url_for('book_page', olid='') }} + olid
+        console.log(bookUrl)
+
+    
+        p = `<div class="search-book-container" onclick="window.location.href='${bookUrl}'"> ${deets}</div>`
+        //console.log(deets)
+        allDoseDeets += p
+    }
+    $('#results-div').html(allDoseDeets)
+    $('.search-book-container').on("click", function() {
+        console.log(this)
+        console.log("hello")
+        console.log(bookUrl)
+    } )
+    clampAll()
+}
+
+    $( document ).ready(function () {liveSearch()})
+
+function clampAll() {
+    const titles = document.querySelectorAll('.search-book-title')
+    for(title of titles) {
+        //console.log(title)
+        $clamp(title, {clamp: 2})
+    }
+    const authors = document.querySelectorAll('.search-book-author')
+    for(author of authors) {
+        //console.log(title)
+        $clamp(author, {clamp: 2})
+    }
+}
+
+
+</script>
 
 </body>
 </html>
