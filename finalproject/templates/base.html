@@ -23,6 +23,7 @@
         
         <nav class="navbar">
 
+
             <a class="nav-item {{ 'active' if active_page == 'home' else '' }}" href="{{ url_for('home') }}">Home</a>
             <!-- <a class="nav-item {{ 'active' if active_page == 'add_book' else '' }}" href="{{ url_for('add_book') }}">Add Books</a> -->
             <a class="nav-item {{ 'active' if active_page == 'list_books' else '' }}" href="{{ url_for('list_books') }}">List Books</a>
@@ -53,6 +54,9 @@
             {% else %}
             <a class="nav-item right {{ 'active' if active_page == 'logout' else '' }}" href="{{ url_for('logout') }}">Log Out</a>
             {% endif %}
+
+            <!-- <label for="menu">l</label> -->
+            <!-- <input type="checkbox" id="menu"> -->
 
             </nav>
     </header>

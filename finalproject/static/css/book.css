@@ -6,6 +6,8 @@
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-rows: 600px;
+    /* grid-auto-flow: dense; */
     /* grid-template-columns: repeat(3, 200px); */
     /* grid-template-columns: 200px 400px 200px; */
     /* grid-template-columns: repeat(2, 1fr); */
@@ -13,7 +15,17 @@
     gap: 50px;
 }
 
-/* @media */
+@media (max-width: 1100px) {
+    .book-container {
+    grid-template-areas:
+    "cover text"
+    "buttons text";
+    }
+    .book-cover {grid-area: cover;}
+    .book-text {grid-area: text;}
+    .right-side {grid-area: buttons;}
+
+}
 .button {
     width: 100%;
 }
@@ -153,12 +165,12 @@
     /* display: -webkit-box; */
     /* -webkit-line-clamp: 2; */
 }
-.book-description:hover {
-    max-height: 1000px;
-    -webkit-box-orient: vertical;
-    display: block;
-    -webkit-line-clamp: 2;
-}
+/* .book-description:hover { */
+/*     max-height: 1000px; */
+/*     -webkit-box-orient: vertical; */
+/*     display: block; */
+/*     -webkit-line-clamp: 2; */
+/* } */
 
 
 

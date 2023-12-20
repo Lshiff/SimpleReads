@@ -2,75 +2,19 @@ from flask import request, render_template, flash, url_for, redirect
 from flask_login import login_user, logout_user, login_required, current_user
 import requests
 from urllib.parse import urlparse
-import json
 
 from finalproject import app, login_manager, bcrypt
-from .models import Book
 from .database_manager import DatabaseManager
 from .forms import RegisterForm, LoginForm
-
-
-book = Book()
-print(book)
 
 
 @login_manager.user_loader
 def load_user(user_id):
     return DatabaseManager.get_user_by_id(user_id)
 
-
 @app.route("/")
 def home():
     return render_template("home.html")
-
-@app.route('/db')
-def db():
-    olid =  "OL265501W"
-    # return str(current_user)
-    # return current_user.display_name
-    # return str(current_user.id)
-    if DatabaseManager.user_book_connection_exists(current_user.id, olid):
-        return 'already exists'
-    # return ('doesnt')
-    DatabaseManager.create_user_book_connection(current_user.id,olid)
-    return "done"
-
-@app.route("/test")
-def test():
-    return render_template(url_for("book_page", olid="OL17710050W"))
-
-# @app.route("/book/<olid>")
-# def book_page(olid):
-
-#     req = requests.get(f'https://openlibrary.org/works/{olid}.json')
-#     # print(req.json())
-#     book_title=req.json().get('title')
-#     underscored_title = "_".join(book_title.split())
-
-#     return redirect(url_for('book_page_redirect', olid=olid, book_title=underscored_title)), LoginForm
-#     return render_template("book.html", book=req.json())
-
-@app.route("/tester", methods=['GET', 'POST'])
-def tester():
-    form = RegisterForm()
-    if form.validate_on_submit():
-
-        # user = DatabaseManager.get_user_by_id(form.password.data)
-        # return str(user)
-
-        DatabaseManager.create_user(
-            display_name = form.display_name.data,
-            username = form.username.data,
-            email = form.email.data,
-            hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        )
-        user = DatabaseManager.get_user_by_username_or_email(form.username.data)
-        return f"User created: {user}"
-
-    users = DatabaseManager.get_all_users()
-    return render_template("tester.html", form=form, users=users)
-
-
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
@@ -78,12 +22,6 @@ def register():
         return redirect(url_for('home'))
     form = RegisterForm()
     if form.validate_on_submit():
-        #Check if username and email are unique
-
-        display_name = form.display_name.data,
-        username = form.username.data,
-        email = form.email.data,
-        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
 
         DatabaseManager.create_user(
             display_name = form.display_name.data,
@@ -102,34 +40,34 @@ def login():
     
     if current_user.is_authenticated:
         return redirect(url_for('home'))
+
     form = LoginForm()
     if form.validate_on_submit():
+
         user = DatabaseManager.get_user_by_username_or_email(form.username_or_email.data)
         if not user:
             flash("No user")
             return render_template("login.html", form=form)
-        print("user found: ", user)
+
         valid_password = bcrypt.check_password_hash(user.hashed_password, form.password.data)
         if not valid_password:
             flash("Bad password")
             return render_template("login.html", form=form)
 
         login_user(user)
-        # flash("Correct!, logged in")
-        next_page = request.args.get('next')
-        print("next page", next_page)
 
+        #If there is next in the url, sends to next url
+        next_page = request.args.get('next')
         if not next_page or urlparse(next_page).netloc != '':
             next_page = url_for('home')
+
         return redirect(next_page)
 
     return render_template("login.html", form=form)
-# login_manager.login_view = "/login"
 
 @app.route('/logout')
 @login_required
 def logout():
-    print("logging out")
     flash("Logged out")
     logout_user()
     return redirect(url_for('home'))
@@ -147,38 +85,18 @@ def book_page_redirect(olid, book_title):
 
     return redirect(url_for("book_page", olid=olid))
 
-
-
 @app.route("/search", methods = ['GET', 'POST'])
 def search_books():
     if request.method == 'POST':
         search_query = request.form['searchbox']
 
-        print("REQUEST")
         req = requests.get('https://openlibrary.org/search.json', {'q': search_query, 'fields': 'key,title,author_name,first_sentence,cover_edition_key', 'sort': 'rating'})
-        # req = requests.get('https://openlibrary.org/search.json', {'q': search_query})
-        print(req.url)
-        print(req)
-        print(req.json())
-
-
         result = req.json()
-
-        print()
-        print("doc")
-        print(result['docs'])
-
-        
 
         books = []
 
         for doc in result['docs']:
             arg = {}
-            # print("Title", doc['title'])
-            # print("Author", doc.get('author_name'))
-            # print("cover?", doc.get('cover_edition_key'))
-            # print(doc.get('key').split("/works/")[1])
-            
             arg['olid'] = doc.get('key').split("/works/")[1]
             arg['title'] = doc.get('title')
             arg['author'] = doc.get('author_name')
@@ -190,20 +108,14 @@ def search_books():
                 arg['cover'] = None
             books.append(arg)
 
-
-        # result = json.loads(req.json())
-        # print(result)
-
         return render_template('search-result.html', books=books)
-    return render_template("search-books.html")
+    return render_template("search-result.html")
 
 @app.route("/list-books")
 @login_required
 def list_books():
-    # user_books_olids = DatabaseManager.get_user_books(current_user.id)
 
     connections = current_user.connections
-    olbooks = [connection.olbook for connection in connections] 
     user_books = []
     for connection in connections:
         user_books.append({
@@ -211,9 +123,7 @@ def list_books():
             'connection': connection
         })
 
-    print(user_books)
-
-    return render_template("list-books.html", olbooks = olbooks, user_books=user_books)
+    return render_template("list-books.html", user_books=user_books)
 
 #POST METHOD FORM
 
@@ -228,7 +138,6 @@ def remove_olbook():
 
     if not DatabaseManager.user_book_connection_exists(current_user.id, olid):
         print("you do't have this book, smth wrong")
-        flash("you don't have that book lol")
         return url_for('book_page', olid=olid)
 
     DatabaseManager.remove_user_book_connection(current_user.id, olid)
