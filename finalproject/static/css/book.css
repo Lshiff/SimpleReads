@@ -17,6 +17,29 @@
 .button {
     width: 100%;
 }
+.add-book-buttons {
+    width: 100%;
+    position: relative;
+}
+.library-buttons {
+    background-color: lightblue;
+    background-color:lightgray;
+    /* border: 2px solid gray; */
+    box-shadow: 0 0.2rem 1rem 0.2rem rgba(30,25,21,.2);
+    position: absolute;
+    top: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* gap: 10px; */
+    width: 100%;
+}
+.add-library-button {
+    /* position: absolute; */
+    width: 80%;
+    margin: 10px 0 10px 0;
+    /* padding: 8px; */
+}
 .alert-danger {
     color: #721c24;
     background-color: #f8d7da;
@@ -30,6 +53,59 @@
 .button.confirm {
     margin-top: 0;
     /* width: 40%; */
+}
+.remove-library-grid-container {
+    /* display: grid; */
+    /* grid-template-columns: 1fr 1fr; */
+}
+#change-library-buttons {
+    margin-top: 0;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    /* font-size: 0px; */
+}
+.change-library-start {
+    margin-top: 0;
+    border-radius: 10px 0 0 10px;
+    display: inline-block;
+    width: 78%;
+    margin-right: 0;
+}
+.change-library-arrow {
+    display: inline-block;
+    width: 20%;
+    border-radius: 0 10px 10px 0;
+    margin-left: 0;
+    margin: 0;
+    height: 100%;
+}
+.arrow {
+    border: solid black;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 3px;
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    position: relative;
+    bottom: 2px;
+}
+.change-library-selector {
+    background-color:lightgray;
+    /* border: 2px solid gray; */
+    box-shadow: 0 0.2rem 1rem 0.2rem rgba(30,25,21,.2);
+    position: absolute;
+    top: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* gap: 10px; */
+    width: 100%;
+}
+.change-library {
+    margin-bottom: 10px;
+    margin: 10px;
+    width: 80%;
 }
 #notes-textarea {
     width: 100%;
@@ -83,3 +159,8 @@
     display: block;
     -webkit-line-clamp: 2;
 }
+
+
+
+
+

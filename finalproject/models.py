@@ -40,11 +40,16 @@ class UserBookConnection(db.Model):
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), primary_key=True)
     book_olid: Mapped[str] = mapped_column(ForeignKey("olbooks.olid"), primary_key=True)
     note: Mapped[str] = mapped_column(String(100000), nullable=True)
+    library: Mapped[str] = mapped_column(String, nullable=False)
 
     olbook: Mapped["OLBook"] = relationship()
 
     def __repr__(self):
-        return f"UserBookConnection({self.user_id}, {self.book_olid})"
+        if self.note:
+            note = self.note[0:50]
+        else:
+            note = None
+        return f"UserBookConnection({self.user_id}, {self.book_olid}, {note}, {self.library})"
 
 # def removeUserBookConnection(user_id)
 

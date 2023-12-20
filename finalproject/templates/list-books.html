@@ -10,45 +10,110 @@
 
 {% block content %}
 
+<div class="container">
 
-<div class="books-container">
+    <div class="left-sidebar">
+        <h3 class="sidebar-header">Select Library</h3>
+        <button id="all" class="library-selector" onclick="filterLibrary('All')">All</button> 
+        <button id="to-read" class="library-selector" onclick="filterLibrary('To Read')">To Read</button> 
+        <button id="read" class="library-selector" onclick="filterLibrary('Read')">Read</button> 
+        <button id="currently-reading" class="library-selector" onclick="filterLibrary('Currently Reading')">Currently Reading</button> 
+    </div>
 
-    {% for book in olbooks %}
+    <div class="books-container">
 
-        <div class="book-container" onclick="window.location.href = `/book/{{ book.olid }}`">
+        {% for user_book in user_books %}
+            {% set book = user_book.olbook %}
+            {% set connection = user_book.connection %}
 
-            <div id="img-container">
-                <img src="https://covers.openlibrary.org/b/id/{{ book.cover_id }}-M.jpg">
+            <div class="book-container" data-library="{{ connection.library }}"  onclick="window.location.href = `/book/{{ book.olid }}`">
+
+                <div id="img-container">
+                    <img src="https://covers.openlibrary.org/b/id/{{ book.cover_id }}-M.jpg">
+                </div>
+
+                <div class="text-container">
+                    <span class="book-title">
+                        {{ book.title }}
+                    </span>
+
+                    <br>
+
+                    <span class="book-author">
+                        by {{ book.author }}
+                    </span>
+
+                    <br>
+
+                    <span class="book-fictionality">
+                        {{ book.fictionality }}
+                    </span>
+
+                    <span class="book-library">
+                        {{ connection.library }}
+                    </span>
+                </div>
+
             </div>
-
-            <div class="text-container">
-                <span class="book-title">
-                    {{ book.title }}
-                </span>
-
-                <br>
-
-                <span class="book-author">
-                    by {{ book.author }}
-                </span>
-
-                <br>
-
-                <span class="book-fictionality">
-                    {{ book.fictionality }}
-                </span>
-
-                <span class="book-library">
-                    {{ book.library }}
-                </span>
-            </div>
-
-        </div>
-        
-    {% endfor %}
+            
+        {% endfor %}
 
 
+    </div>
 </div>
+
+
+
+<script>
+
+$(document).ready(function() {
+    loadLibraryNumbers()
+})
+
+function loadLibraryNumbers() {
+
+
+    let read = 0
+    let toRead = 0
+    let currentlyReading = 0
+    $('.book-container').each(function(i, div) {
+
+        if (div.dataset.library === 'Read') {read++}
+        if (div.dataset.library === 'To Read') {toRead++}
+        if (div.dataset.library === 'Currently Reading') {currentlyReading++}
+
+    })
+
+    $('#read')[0].innerText += ` (${read})`
+    $('#to-read')[0].innerText += ` (${toRead})`
+    $('#currently-reading')[0].innerText += ` (${currentlyReading})`
+    $('#all')[0].innerText += ` (${$('.book-container').length})`
+
+}
+
+function filterLibrary(library) {
+    $('.book-container').show()
+    if (library === "All") {return }
+
+    $('.book-container').each(function(i, div) {
+
+        div = $(div)
+        divLibrary = div.data('library')
+        if (library !== divLibrary) {
+            div.hide()
+        }
+    })
+}
+
+
+
+
+</script>
+
+
+
+
+
 
 
 {% endblock content %}

@@ -23,11 +23,29 @@ Book -
         {% if current_user.is_anonymous %}
             <button  class="add-book-button button" onclick="loginRedirect()">Log In</button>
         {% elif not dbm.ubc_exists(current_user.id, olid) %}
-            <button  class="add-book-button button" onclick="addBookRequest()">Add Book</button>
-        {% else %}
-            <div id="book-removal">
-                <button id="remove-book-button" class="add-book-button button" onclick="removeBookConfirm()">Remove Book</button>
+            <div class="add-book-buttons">
+                <button  class="add-book-button button" onclick="$('.library-buttons').show()">Add Book</button>
+                <div class="library-buttons">
+                    <button class="add-library-button button" onclick="addBookRequest('To Read')">To Read</button>
+                    <button class="add-library-button button" onclick="addBookRequest('Read')">Read</button>
+                    <button class="add-library-button button" onclick="addBookRequest('Currently Reading')">Currently Reading</button>
+                </div>
             </div>
+        {% else %}
+            <!-- <div class="remove-library-grid-container"> -->
+                <div id="book-removal">
+                    <button id="remove-book-button" class="add-book-button button" onclick="removeBookConfirm()">Remove Book</button>
+                </div>
+                <div id="change-library-buttons">
+                    <button class="button change-library-start" onclick="showChangeLibraryButtons()"></button
+                    ><button class="button change-library-arrow" onclick="showChangeLibraryButtons()"><i class="arrow"></i></button>
+                    <div class="change-library-selector">
+                        <button class="button change-library to-read" onclick="changeLibrary('To Read')">To Read</button>
+                        <button class="button change-library read" onclick="changeLibrary('Read')">Read</button>
+                        <button class="button change-library currently-reading" onclick="changeLibrary('Currently Reading')">Currently Reading</button>
+                    </div>
+                </div>
+            <!-- </div> -->
         {% endif %}
         </div>
 
@@ -44,6 +62,71 @@ Book -
 </div>
 
 <script>
+
+let olid = "{{ olid }}"
+
+$(document).ready(function() {
+    $('.library-buttons').hide()   
+    $('.add-book-buttons').on("mouseleave", function() {
+        $('.library-buttons').hide()   
+    })
+
+    $('.change-library-selector').hide()   
+    $('.change-library').hide()   
+    $('.change-library-selector').on("mouseleave", function() {
+        console.log("mslv")
+        $('.change-library-selector').hide()   
+        $('.change-library').hide()   
+    })
+
+    setChangeLibraryButton()
+    //showChangeLibraryButtons()
+})
+
+
+function setChangeLibraryButton() {
+    currentLibrary = "{{ dbm.get_library(current_user.id, olid) }}"
+    console.log(currentLibrary)
+    $('.change-library-start').text(currentLibrary)
+}
+function showChangeLibraryButtons() {
+    $('.change-library-selector').show()   
+
+    currentLibrary = "{{ dbm.get_library(current_user.id, olid) }}"
+    if (currentLibrary !== "To Read") {
+        $('.to-read').show()
+    }
+    if (currentLibrary !== "Read") {
+        $('.read').show()
+    }
+    if (currentLibrary !== "Currently Reading") {
+        $('.currently-reading').show()
+    }
+
+}
+function changeLibrary(library) {
+    console.log()
+    let data = {
+        olid: olid,
+        library: library
+    }
+
+    $.ajax({
+        type: 'POST',
+        url: '/change-library',
+        contentType: 'application/json;charset=UTF-8',
+        data: JSON.stringify(data),
+        success: function(response) {
+            console.log(response)
+            location.reload() 
+        },
+        error: function(xhr, status, error) {
+            console.log("Error", xhr, status, error)
+        }
+    })
+
+
+}
 
 let nta = $('#notes-textarea')
 {% if current_user.is_anonymous %}
@@ -102,7 +185,6 @@ $('#notes-textarea').keydown(function(event) {
 })
 
 
-let olid = "{{ olid }}"
 
 function loginRedirect() {
     window.location.href = `/login?next=/book/${olid}`
@@ -155,9 +237,22 @@ function removeBookCancel() {
     div.append(elem)
 }
 
+function addBookButtons() {
+    elems = `
+    `    
+    $(".add-book-buttons").append(elems)
+    $('.library-buttons').on("mouseleave", function() {
 
-function addBookRequest() {
-    let data = { olid: olid}
+    })
+
+}
+addBookButtons()
+
+function addBookRequest(library) {
+    let data = { 
+        olid: olid,
+        library: library
+    }
     $.ajax({
         type: 'POST',
         url: '/add-olbook',

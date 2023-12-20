@@ -12,8 +12,8 @@ with app.app_context():
 class DatabaseManager:
 
     @staticmethod
-    def create_user_book_connection(user_id: int, book_olid):
-        user_book_connection = UserBookConnection(user_id = user_id, book_olid = book_olid)
+    def create_user_book_connection(user_id: int, book_olid, library):
+        user_book_connection = UserBookConnection(user_id = user_id, book_olid = book_olid, library=library)
         with app.app_context():
             db.session.add(user_book_connection)
             db.session.commit()
@@ -82,6 +82,24 @@ class DatabaseManager:
         db.session.delete(ubc)
         db.session.commit()
         # with app.app_context():
+
+    @staticmethod
+    def edit_library(user_id, book_olid, library):
+        ubc = db.session.query(UserBookConnection).filter(UserBookConnection.user_id == user_id).filter(UserBookConnection.book_olid == book_olid).first()
+        if not ubc:
+            print("no ubc edit library")
+            return False
+        ubc.library = library
+        db.session.add(ubc)
+        db.session.commit()
+
+    @staticmethod
+    def get_library(user_id, book_olid):
+        ubc = db.session.query(UserBookConnection).filter(UserBookConnection.user_id == user_id).filter(UserBookConnection.book_olid == book_olid).first()
+        if not ubc:
+            print("no ubc get library")
+            return None
+        return ubc.library
 
     @staticmethod
     def get_all_books():

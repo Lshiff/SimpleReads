@@ -1,5 +1,6 @@
 html, body {
     margin: 0;
+    /* background-color: #F9F8F8; */
 }
 .header {
     /* padding: 20px; */
@@ -88,6 +89,7 @@ nav {
     border-color: black;
     width: 225px;
     height: 100%;
+    font-size: 1em;
 }
 
 #submit {

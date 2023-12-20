@@ -201,8 +201,16 @@ def list_books():
 
     connections = current_user.connections
     olbooks = [connection.olbook for connection in connections] 
+    user_books = []
+    for connection in connections:
+        user_books.append({
+            'olbook': connection.olbook,
+            'connection': connection
+        })
 
-    return render_template("list-books.html", olbooks = olbooks)
+    print(user_books)
+
+    return render_template("list-books.html", olbooks = olbooks, user_books=user_books)
 
 #POST METHOD FORM
 
@@ -230,6 +238,7 @@ def remove_olbook():
 def add_olbook():
 
     olid = request.json.get('olid')
+    library = request.json.get('library')
     print(olid)
 
     if current_user.is_anonymous:
@@ -246,7 +255,7 @@ def add_olbook():
         flash("You already have that book added")
         return '/list-books'
 
-    DatabaseManager.create_user_book_connection(current_user.id,olid)
+    DatabaseManager.create_user_book_connection(current_user.id, olid, library)
     # flash("Book has been added")
     return '/list-books'
 
@@ -348,7 +357,25 @@ def save_notes():
 
     return "got it: " + note
 
+@app.route("/change-library", methods = ['POST'])
+def change_library():
+    if current_user.is_anonymous:
+        print("anon user")
+        return("no user logged in")
 
+    olid = request.json.get('olid')
+    library = request.json.get('library')
+
+
+    if not DatabaseManager.ubc_exists(current_user.id, olid):
+        print("not added")
+        return("Book not added")
+
+    print("Incoming library:", library)
+
+    DatabaseManager.edit_library(current_user.id, olid, library)
+
+    return "got it: " + library
 
 
 
