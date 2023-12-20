@@ -82,8 +82,35 @@ $(document).ready(function() {
     {% if current_user.is_authenticated %}
         setChangeLibraryButton()
     {% endif %}
-    //showChangeLibraryButtons()
+
+    setupNotesTextarea()
+
 })
+
+function setupNotesTextarea() {
+    let nta = $('#notes-textarea')
+    {% if current_user.is_anonymous %}
+        nta.attr('disabled', true)
+        nta.attr('placeholder', 'Log In and add this book to your library to add notes')
+    {% elif not dbm.ubc_exists(current_user.id, olid) %}
+        nta.attr("disabled", true)
+        nta.attr('placeholder', 'Add this book to your library to add notes')
+    {% endif %}
+
+    changeNotesHeight()
+
+    //Prevents browser leaving unsaved changes
+    $('#notes-textarea').dirty({preventLeaving: true})
+
+    //Saves on Cmd+Enter and Ctrl+Enter
+    $('#notes-textarea').keydown(function(event) {
+        if (event.keyCode == 13 && (event.metaKey || event.ctrlKey)) {
+            saveNote()
+            $('#notes-textarea').blur()
+        }
+    })
+
+}
 
 
 function setChangeLibraryButton() {
@@ -99,6 +126,7 @@ function showChangeLibraryButtons() {
     {% if current_user.is_authenticated %}
         currentLibrary = "{{ dbm.get_library(current_user.id, olid) }}"
     {% endif %}
+
     if (currentLibrary !== "To Read") {
         $('.to-read').show()
     }
@@ -130,28 +158,11 @@ function changeLibrary(library) {
             console.log("Error", xhr, status, error)
         }
     })
-
-
 }
 
-let nta = $('#notes-textarea')
-{% if current_user.is_anonymous %}
-    nta.attr('disabled', true)
-    nta.attr('placeholder', 'Log In and add this book to your library to add notes')
-{% else %}
-    {% if not dbm.ubc_exists(current_user.id, olid) %}
-
-        nta.attr("disabled", true)
-        nta.attr('placeholder', 'Add this book to your library to add notes')
-
-    {% endif %}
-
-{% endif %}
 
 
-changeNotesHeight()
 
-$('#notes-textarea').dirty({preventLeaving: true})
 function setAsDirty() {
     $('#notes-textarea').dirty("setAsDirty")
     $('#save-changes-button').attr('disabled', false)
@@ -175,20 +186,11 @@ function displayChangesSaved() {
     elem = `<p class="alert alert-success" id="changes-saved-alert">Changes Saved!</p>`
     //$('.save-wrapper').append(elem)
     $(elem).insertBefore('.save-wrapper')
-    setTimeout(removeChangesSavedAlert, 1500)
-}
-function removeChangesSavedAlert() {
-    console.log("removing")
-    $('#changes-saved-alert').remove()
+    setTimeout(function() {
+        $('#changes-saved-alert').remove()
+    }, 1500)
 }
 
-$('#notes-textarea').keydown(function(event) {
-    if (event.keyCode == 13 && (event.metaKey || event.ctrlKey)) {
-        saveNote()
-        $('#notes-textarea').blur()
-
-    }
-})
 
 
 
@@ -243,17 +245,6 @@ function removeBookCancel() {
     div.append(elem)
 }
 
-function addBookButtons() {
-    elems = `
-    `    
-    $(".add-book-buttons").append(elems)
-    $('.library-buttons').on("mouseleave", function() {
-
-    })
-
-}
-addBookButtons()
-
 function addBookRequest(library) {
     let data = { 
         olid: olid,
@@ -273,6 +264,7 @@ function addBookRequest(library) {
             console.error('Error sending data', error);
         }
     })
+    //setTmeout is so the button click registers before the buttons are hidden
     setTimeout(function() {
         $('.library-buttons').hide
     }, 0)
@@ -326,17 +318,14 @@ function updatePage(response) {
     $('.book-cover').append(img)
 
 
-//    for (cover of response['covers']) {
+    //Displays all covers – may be useful to chose cover in custom olbook
+    //for (cover of response['covers']) {
         //img = `<img src="https://covers.openlibrary.org/b/id/${cover}-L.jpg">`
         //$('.book-cover').append(img)
-
     //}
 
     console.log(response)
     updateAuthor(response)
-
-
-
 }
 
 
@@ -349,7 +338,6 @@ function getAuthors(response) {
     console.log(response['authors'])
     for (authorDict of response['authors']) {
         key = authorDict['author']['key']
-        //console.log(key)
 
         const promise = fetch(`https://openlibrary.org${key}.json`)
             .then(response => response.json())
@@ -397,23 +385,6 @@ function updateAuthor(response) {
                 console.error("Error me", error)
             })
 }
-
-        //$.get(`https://openlibrary.org${key}.json`, function(authResponse) {
-            //console.log(authResponse)
-            //console.log(authResponse['name'])
-         //   names.push(String(authResponse['name']))
-
-        //})
-
-
-            //console.log("names: ", names)
-
-
-    
-
-
-
-
 
 </script>
 
