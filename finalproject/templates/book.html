@@ -79,20 +79,26 @@ $(document).ready(function() {
         $('.change-library').hide()   
     })
 
-    setChangeLibraryButton()
+    {% if current_user.is_authenticated %}
+        setChangeLibraryButton()
+    {% endif %}
     //showChangeLibraryButtons()
 })
 
 
 function setChangeLibraryButton() {
-    currentLibrary = "{{ dbm.get_library(current_user.id, olid) }}"
-    console.log(currentLibrary)
-    $('.change-library-start').text(currentLibrary)
+    {% if current_user.is_authenticated %}
+        currentLibrary = "{{ dbm.get_library(current_user.id, olid) }}"
+        console.log(currentLibrary)
+        $('.change-library-start').text(currentLibrary)
+    {% endif %}
 }
 function showChangeLibraryButtons() {
     $('.change-library-selector').show()   
 
-    currentLibrary = "{{ dbm.get_library(current_user.id, olid) }}"
+    {% if current_user.is_authenticated %}
+        currentLibrary = "{{ dbm.get_library(current_user.id, olid) }}"
+    {% endif %}
     if (currentLibrary !== "To Read") {
         $('.to-read').show()
     }
@@ -267,6 +273,9 @@ function addBookRequest(library) {
             console.error('Error sending data', error);
         }
     })
+    setTimeout(function() {
+        $('.library-buttons').hide
+    }, 0)
 }
 function removeBookRequest() {
     let data = { olid: olid}

@@ -174,3 +174,11 @@ nav {
     color: blue;
     /* margin: auto 0; */
 }
+.search-end {
+    height: 50px;
+    background-color: lightblue;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

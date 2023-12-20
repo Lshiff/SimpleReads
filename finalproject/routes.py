@@ -174,9 +174,12 @@ def search_books():
 
         for doc in result['docs']:
             arg = {}
-            print("Title", doc['title'])
-            print("Author", doc.get('author_name'))
-            print("cover?", doc.get('cover_edition_key'))
+            # print("Title", doc['title'])
+            # print("Author", doc.get('author_name'))
+            # print("cover?", doc.get('cover_edition_key'))
+            # print(doc.get('key').split("/works/")[1])
+            
+            arg['olid'] = doc.get('key').split("/works/")[1]
             arg['title'] = doc.get('title')
             arg['author'] = doc.get('author_name')
             cover = doc.get('cover_edition_key')
@@ -252,7 +255,7 @@ def add_olbook():
 
     if DatabaseManager.user_book_connection_exists(current_user.id, olid):
         print("already exists")
-        flash("You already have that book added")
+        # flash("You already have that book added")
         return '/list-books'
 
     DatabaseManager.create_user_book_connection(current_user.id, olid, library)

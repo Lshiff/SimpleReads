@@ -16,7 +16,7 @@
     <div class="books-container">
     
         {% for book in books %}
-            <div class="book-container">
+            <div class="book-container" onclick="window.location.href ='{{ url_for('book_page', olid=book.olid) }}'">
                 {% if book.cover %}
                     <div class="book-cover-container">
                         <img src="{{ book.cover }}" class="book-cover">

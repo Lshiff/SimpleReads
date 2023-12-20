@@ -4,7 +4,7 @@
 }
 
 .book-container {
-    margin: 50px;
+    margin: 40px;
     width: 400px;
     height: 200px;
     display: flex;
@@ -15,6 +15,7 @@
     background-color: lightgreen;
     background-color: rgb(235, 238, 144);
     border-color: yellow;
+    cursor: pointer;
 }
 
 

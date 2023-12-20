@@ -4,16 +4,39 @@
 
 {% set active_page = 'home' %}
 
+{% block head %}
+    <link rel='stylesheet', href='{{ url_for("static", filename="css/home.css") }}'>
+{% endblock head %}
+
 {% block content %}
 
 
+        <br>
+    {% if current_user.is_anonymous %}
+        <div class="welcome">
+
+            <h3>Welcome</h3>
+
+            <a href='/login'>Login</a> or <a href='register'>Register</a> to get started
+        </div>
+        
+    {% else %}
+
+
+    <div class="welcome">
+
+        <h3>Welcome, {{ current_user.display_name }}</h3>
+
+        <p>
+        Search for a book to add to your collection<br>
+        Then, take a look at <a href="/list-books">your books</a>
+        </p>
+        
+    </div>
 
 
 
-<a href="{{ url_for('add_book')}}">Add book</a>
-<br>
-<a href="{{ url_for('list_books')}}">List Books</a>
-
+    {% endif %}
 
 
 
