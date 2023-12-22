@@ -13,7 +13,16 @@
         <li>{{ user.display_name}}, {{ user.username }}, {{ user.email }}</li>
         <ol>
         {% for connection in user.connections %}
-            <li>{{ connection.olbook.title }}, {{ connection.library }}</li>
+            <li>{{ connection.olbook.title }}, {{ connection.library }}  
+                {% if connection.rating %}
+                     ({% for rating in range(connection.rating) %}
+                        <i class="star fa-star fa-solid fa-xs"></i>
+                    {% endfor %})
+                {% endif %}
+                {% if connection.note %}
+                || {{ connection.note }}
+                {% endif %}
+            </li>
         {% endfor %}
         </ol>
 
