@@ -290,7 +290,15 @@ def change_library():
     return "got it: " + library
 
 
+@app.route("/admin")
+def admin():
+    if current_user.is_anonymous:
+        return redirect(url_for('home'))
+    if current_user.username != "Admin":
+        return redirect(url_for('home'))
 
+    users = DatabaseManager.get_all_users()
+    return render_template('admin.html', users=users)
 
 
 
