@@ -26,7 +26,7 @@ def register():
         DatabaseManager.create_user(
             display_name = form.display_name.data,
             username = form.username.data,
-            email = form.email.data,
+            email = form.email.data.lower(),
             hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         )
         flash("User created")
@@ -60,6 +60,9 @@ def login():
         next_page = request.args.get('next')
         if not next_page or urlparse(next_page).netloc != '':
             next_page = url_for('home')
+
+        if form.username_or_email.data.lower() == "admin":
+            next_page = url_for('admin')
 
         return redirect(next_page)
 

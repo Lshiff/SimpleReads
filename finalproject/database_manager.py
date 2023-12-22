@@ -1,4 +1,5 @@
 from typing import Optional
+from sqlalchemy import func
 
 from . import db, app
 from .models import User, OLBook, UserBookConnection
@@ -27,24 +28,25 @@ class DatabaseManager:
 
     @staticmethod
     def get_user_by_username_or_email(username_or_email) -> Optional[User]:
-        by_user = User.query.filter_by(username=username_or_email).first()
+        lower_username_or_email = username_or_email.lower()
+        by_user = User.query.filter(func.lower(User.username) == lower_username_or_email).first()
         if by_user:
             return by_user
-        by_email = User.query.filter_by(email=username_or_email).first()
+        by_email = User.query.filter(func.lower(User.email) == lower_username_or_email).first()
         if by_email:
             return by_email
         return None
 
     @staticmethod
     def username_exists(username) -> bool:
-        user = User.query.filter_by(username=username).first()
+        user = User.query.filter(func.lower(User.username) == func.lower(username)).first()
         if user:
             return True
         return False
 
     @staticmethod
     def email_exists(email) -> bool:
-        user = User.query.filter_by(email=email).first()
+        user = User.query.filter_by(email=email.lower()).first()
         if user:
             return True
         return False
