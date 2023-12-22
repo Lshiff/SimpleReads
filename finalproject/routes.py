@@ -292,6 +292,20 @@ def change_library():
 
     return "got it: " + library
 
+@app.route("/set-rating", methods=['POST'])
+def set_rating():
+    if current_user.is_anonymous:
+        print("anon user")
+        return("no user logged in")
+
+    olid = request.json.get('olid')
+    rating = request.json.get('rating')
+
+    print("saving rating", rating)
+    DatabaseManager.save_rating(current_user.id, olid, rating)
+
+    return "rating set as " + str(rating)
+
 
 @app.route("/admin")
 def admin():

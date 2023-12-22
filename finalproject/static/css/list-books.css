@@ -76,6 +76,13 @@
     font-size: 1.25em;
     color: blueviolet;
 }
+.rating {
+    display: inline-block;
+    margin-top: 8px;
+}
+.rating i {
+    color: lightseagreen;
+}
 
 .book-fictionality {
     color: gray;

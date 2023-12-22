@@ -49,6 +49,18 @@ Book -
         {% endif %}
         </div>
 
+        <div class="review">
+            <!-- <i class="star fa-solid fa-star"></i> -->
+            <!-- <i class="star fa-solid fa-star"></i> -->
+            <i class="star fa-regular fa-star"></i>
+            <i class="star fa-regular fa-star"></i>
+            <i class="star fa-regular fa-star"></i>
+            <i class="star fa-regular fa-star"></i>
+            <i class="star fa-regular fa-star"></i>
+            <span id="review-saved" class="hidden alert alert-success">Changed Saved!</span>
+        </div>
+
+
         <div class="notes">
             <form id="notes-form">
                 <textarea id="notes-textarea" placeholder="Add notes here..." rows="10" cols="30" maxlength="100000" oninput="setAsDirty()">{{ user_note }}</textarea>
@@ -84,8 +96,58 @@ $(document).ready(function() {
     {% endif %}
 
     setupNotesTextarea()
+    review()
 
 })
+
+function review() {
+
+    {% if current_user.is_authenticated %}
+        let rating = {{ dbm.get_rating(current_user.id, olid) }} 
+        $('.star').removeClass('fa-solid')
+        $('.star').removeClass('fa-solid')
+        $(`.star:lt(${rating})`).addClass('fa-solid')
+        $(`.star:gt(${rating})`).addClass('fa-regular')
+    {% endif %}
+
+    $('.star').on("click", function() {
+
+        index = $(this).index()
+        $('.star').removeClass('fa-solid')
+        $('.star').removeClass('fa-solid')
+        $(`.star:lt(${index+1})`).addClass('fa-solid')
+        $(`.star:gt(${index})`).addClass('fa-regular')
+
+        let rating = $(this).index() + 1
+
+        data = {
+            olid: olid,
+            rating: rating
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/set-rating',
+            contentType: 'application/json;charset=UTF-8',
+            data: JSON.stringify(data),
+            success: function(response) {
+                console.log(response)
+            },
+            error: function(xhr, status, error) {
+                console.log("Error", xhr, status, error)
+            }
+        })
+
+        $('#review-saved').addClass('visible')
+        $('#review-saved').removeClass('hidden')
+        setTimeout(function() {
+            $('#review-saved').addClass('hidden')
+            $('#review-saved').removeClass('visible')
+        }, 1000)
+
+        
+    }) 
+}
 
 function setupNotesTextarea() {
     let nta = $('#notes-textarea')

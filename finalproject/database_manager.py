@@ -114,6 +114,16 @@ class DatabaseManager:
         return ubc.library
 
     @staticmethod
+    def get_rating(user_id, book_olid):
+        ubc = db.session.query(UserBookConnection).filter(UserBookConnection.user_id == user_id).filter(UserBookConnection.book_olid == book_olid).first()
+        if not ubc:
+            print("no ubc get rating")
+            return 0
+        if not ubc.rating:
+            return 0
+        return ubc.rating
+
+    @staticmethod
     def save_notes(user_id, book_olid, note_text):
         ubc = db.session.query(UserBookConnection).filter(UserBookConnection.user_id == user_id).filter(UserBookConnection.book_olid == book_olid).first()
         if not ubc:
@@ -130,6 +140,16 @@ class DatabaseManager:
             print("no ubc edit library")
             return False
         ubc.library = library
+        db.session.add(ubc)
+        db.session.commit()
+
+    @staticmethod
+    def save_rating(user_id, book_olid, rating):
+        ubc = db.session.query(UserBookConnection).filter(UserBookConnection.user_id == user_id).filter(UserBookConnection.book_olid == book_olid).first()
+        if not ubc:
+            print("no ubc save rating")
+            return False
+        ubc.rating = rating
         db.session.add(ubc)
         db.session.commit()
 

@@ -49,6 +49,16 @@
                         {{ book.fictionality }}
                     </span>
 
+                    {% if connection.rating %}
+                        <span class="rating">
+                            <i class="fa-star {{ 'fa-solid' if connection.rating >= 1 else 'fa-regular' }}"></i> 
+                            <i class="fa-star {{ 'fa-solid' if connection.rating >= 2 else 'fa-regular' }}"></i> 
+                            <i class="fa-star {{ 'fa-solid' if connection.rating >= 3 else 'fa-regular' }}"></i> 
+                            <i class="fa-star {{ 'fa-solid' if connection.rating >= 4 else 'fa-regular' }}"></i> 
+                            <i class="fa-star {{ 'fa-solid' if connection.rating >= 5 else 'fa-regular' }}"></i> 
+                        </span>
+                    {% endif %}
+
                     <span class="book-library">
                         {{ connection.library }}
                     </span>
@@ -90,6 +100,7 @@ function loadLibraryNumbers() {
     $('#all')[0].innerText += ` (${$('.book-container').length})`
 
 }
+
 
 function filterLibrary(library) {
     $('.book-container').show()

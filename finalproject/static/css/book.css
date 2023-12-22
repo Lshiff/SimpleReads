@@ -119,6 +119,32 @@
     margin: 10px;
     width: 80%;
 }
+
+.review {
+    margin-bottom: 20px;
+}
+review i{
+    padding:5px;
+}
+.review i:hover {
+    color: orange;
+}
+.review i:has(~i:hover) {
+    color: orange;
+}
+#review-saved {
+    padding: 0.25rem .75rem;
+    margin-left: 10px;
+    transition: opacity 0.1s;
+}
+.visible {
+    opacity: 1;
+}
+.hidden {
+    opacity: 0;
+}
+
+
 #notes-textarea {
     width: 100%;
     resize: none;

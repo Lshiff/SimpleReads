@@ -35,6 +35,7 @@ class UserBookConnection(db.Model):
     book_olid: Mapped[str] = mapped_column(ForeignKey("olbooks.olid"), primary_key=True)
     note: Mapped[str] = mapped_column(String(100000), nullable=True)
     library: Mapped[str] = mapped_column(String, nullable=False)
+    rating: Mapped[int] = mapped_column(Integer, nullable=True)
 
     olbook: Mapped["OLBook"] = relationship()
 
