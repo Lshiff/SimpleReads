@@ -1,58 +1,14 @@
-from . import db, app
-from .models import Book, User, OLBook, UserBookConnection
-
 from typing import Optional
 
-# from config import app
-# db.init_app(app)
+from . import db, app
+from .models import User, OLBook, UserBookConnection
 
 with app.app_context():
     db.create_all()
 
 class DatabaseManager:
 
-    @staticmethod
-    def create_user_book_connection(user_id: int, book_olid, library):
-        user_book_connection = UserBookConnection(user_id = user_id, book_olid = book_olid, library=library)
-        with app.app_context():
-            db.session.add(user_book_connection)
-            db.session.commit()
-
-
-    @staticmethod
-    def create_olobook(olid: str, title: str, author: Optional[str] = None, cover_id: Optional[str] = None):
-        olbook = OLBook(
-            olid=olid,
-            title=title,
-            author=author,
-            cover_id=cover_id
-        )
-        with app.app_context():
-            db.session.add(olbook)
-            db.session.commit()
-
-
-    @staticmethod
-    def create_book(title: str = "", author: str = "", rating: Optional[int] = None, fictionality: Optional[str] = None, library: Optional[str] = None):
-        if not rating:
-            book = Book(
-                title=title,
-                author = author,
-                fictionality = fictionality,
-                library = library
-            )
-        else:
-            book = Book(
-                title=title,
-                author = author,
-                rating = rating,
-                fictionality = fictionality,
-                library = library
-            )
-        with app.app_context():
-            db.session.add(book)
-            db.session.commit()
-        return book
+    #Users
 
     @staticmethod
     def create_user(display_name: str, username: str, email: str, hashed_password: str):
@@ -60,80 +16,14 @@ class DatabaseManager:
         with app.app_context(): 
             db.session.add(user)
             db.session.commit()
-        return user
-
-    @staticmethod
-    def save_notes(user_id, book_olid, note_text):
-        ubc = db.session.query(UserBookConnection).filter(UserBookConnection.user_id == user_id).filter(UserBookConnection.book_olid == book_olid).first()
-        if not ubc:
-            print(f"No UBC found for {user_id} and {book_olid}, couldnt add note {note_text[0:500]}")
-            return "Bad lol"
-        ubc.note = note_text
-        db.session.add(ubc)
-        db.session.commit()
-
-    @staticmethod
-    def remove_user_book_connection(user_id, book_olid):
-        # ubc = UserBookConnection.query.filter_by(user_id=user_id).filter_by(book_olid=book_olid).first()
-        ubc = db.session.query(UserBookConnection).filter(UserBookConnection.user_id == user_id).filter(UserBookConnection.book_olid == book_olid).first()
-        if not ubc:
-            print("bad ubc")
-            return False
-        db.session.delete(ubc)
-        db.session.commit()
-        # with app.app_context():
-
-    @staticmethod
-    def edit_library(user_id, book_olid, library):
-        ubc = db.session.query(UserBookConnection).filter(UserBookConnection.user_id == user_id).filter(UserBookConnection.book_olid == book_olid).first()
-        if not ubc:
-            print("no ubc edit library")
-            return False
-        ubc.library = library
-        db.session.add(ubc)
-        db.session.commit()
-
-    @staticmethod
-    def get_library(user_id, book_olid):
-        ubc = db.session.query(UserBookConnection).filter(UserBookConnection.user_id == user_id).filter(UserBookConnection.book_olid == book_olid).first()
-        if not ubc:
-            print("no ubc get library")
-            return None
-        return ubc.library
-
-    @staticmethod
-    def get_all_books():
-        return db.session.execute(db.select(Book)).scalars()
-
-    # @staticmethod
-    # def get_user_books(user_id):
-    #     return UserBookConnection.query.filter_by(user_id=user_id).all()
-
-    @staticmethod
-    def olbook_exists(olid):
-        olbook = OLBook.query.filter_by(olid=olid).first()
-        if olbook:
-            return True
-        return False
-
-    @staticmethod
-    def user_book_connection_exists(user_id, olid):
-        ubc = UserBookConnection.query.filter_by(user_id=user_id).filter_by(book_olid=olid).first()
-        if ubc:
-            return True
-        return False
-
-    @staticmethod
-    def ubc_exists(user_id, olid):
-        return DatabaseManager.user_book_connection_exists(user_id, olid)
-
-    @staticmethod
-    def get_user_by_id(id: int) -> Optional[User]:
-        return User.query.filter_by(id=id).first()
 
     @staticmethod
     def get_all_users():
         return User.query.all()
+
+    @staticmethod
+    def get_user_by_id(id: int) -> Optional[User]:
+        return User.query.filter_by(id=id).first()
 
     @staticmethod
     def get_user_by_username_or_email(username_or_email) -> Optional[User]:
@@ -160,6 +50,42 @@ class DatabaseManager:
         return False
 
 
+    #OLBooks
+
+    @staticmethod
+    def create_olobook(olid: str, title: str, author: Optional[str] = None, cover_id: Optional[str] = None):
+        olbook = OLBook( olid=olid, title=title, author=author, cover_id=cover_id)
+        with app.app_context():
+            db.session.add(olbook)
+            db.session.commit()
+
+    @staticmethod
+    def olbook_exists(olid):
+        olbook = OLBook.query.filter_by(olid=olid).first()
+        if olbook:
+            return True
+        return False
+
+
+    #UserBookConnections
+
+    @staticmethod
+    def create_user_book_connection(user_id: int, book_olid, library):
+        user_book_connection = UserBookConnection(user_id = user_id, book_olid = book_olid, library=library)
+        with app.app_context():
+            db.session.add(user_book_connection)
+            db.session.commit()
+
+    @staticmethod
+    def user_book_connection_exists(user_id, olid):
+        ubc = UserBookConnection.query.filter_by(user_id=user_id).filter_by(book_olid=olid).first()
+        if ubc:
+            return True
+        return False
+    @staticmethod
+    def ubc_exists(user_id, olid):
+        return DatabaseManager.user_book_connection_exists(user_id, olid)
+
     @staticmethod
     def get_ubc(user_id, book_olid):
         ubc = UserBookConnection.query.filter_by(user_id=user_id).filter_by(book_olid=book_olid).first()
@@ -177,19 +103,39 @@ class DatabaseManager:
         print("got", ubc.note)
         return ubc.note
 
+    @staticmethod
+    def get_library(user_id, book_olid):
+        ubc = db.session.query(UserBookConnection).filter(UserBookConnection.user_id == user_id).filter(UserBookConnection.book_olid == book_olid).first()
+        if not ubc:
+            print("no ubc get library")
+            return None
+        return ubc.library
 
+    @staticmethod
+    def save_notes(user_id, book_olid, note_text):
+        ubc = db.session.query(UserBookConnection).filter(UserBookConnection.user_id == user_id).filter(UserBookConnection.book_olid == book_olid).first()
+        if not ubc:
+            print(f"No UBC found for {user_id} and {book_olid}, couldnt add note {note_text[0:500]}")
+            return "Bad lol"
+        ubc.note = note_text
+        db.session.add(ubc)
+        db.session.commit()
 
+    @staticmethod
+    def edit_library(user_id, book_olid, library):
+        ubc = db.session.query(UserBookConnection).filter(UserBookConnection.user_id == user_id).filter(UserBookConnection.book_olid == book_olid).first()
+        if not ubc:
+            print("no ubc edit library")
+            return False
+        ubc.library = library
+        db.session.add(ubc)
+        db.session.commit()
 
-if __name__ == "__main__":
-    print("maion creating book")
-    DatabaseManager.create_book(
-        title = "Percy Jackson",
-        author = "Rick Riordan",
-        rating = 10,
-        fictionality = "Fiction",
-        library = "Read"
-        )
-    print("maion created book")
-
-
-
+    @staticmethod
+    def remove_user_book_connection(user_id, book_olid):
+        ubc = db.session.query(UserBookConnection).filter(UserBookConnection.user_id == user_id).filter(UserBookConnection.book_olid == book_olid).first()
+        if not ubc:
+            print("bad ubc")
+            return False
+        db.session.delete(ubc)
+        db.session.commit()
