@@ -4,7 +4,6 @@
 
     <title>{% block title %}{% endblock title %}</title>
 
-    {# <link rel="stylesheet" href="{{ url_for('static', filename='css/{% block css %}{% endblock css %}.css) }}"> #}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
 
     
@@ -40,11 +39,9 @@
                     </form>
                 </div> 
 
-                <!-- <div class="clip-mask"> -->
                     <div id="results-div">
                         
                     </div>
-                <!-- </div> -->
 
             </div>
 
@@ -85,8 +82,6 @@
 
 
 
-{# <script src='{{ url_for("static", filename="js/jquery.js") }}'></script>
-<script src='{{ url_for("static", filename="js/jquery.quickfit.js") }}'></script> #}
 <script>
 
 
@@ -95,7 +90,6 @@ $('#searchbar').on("focusout", function() {
     setTimeout(() => {
         $('#results-div').hide()
     }, 200)
-//    $('#results-div').hide()
 })
 $('#searchbar').on("focusin", function() {
     $('#results-div').show()
@@ -119,14 +113,11 @@ $(document).on('keypress', function(event) {
 function liveSearch(searchbar) {
     console.log("livesarch")
     searchQuery = $('#searchbar').val()
-    //console.log(searchQuery)
-    //$('#results').text(searchQuery)
     $.ajax({
         url: 'https://openlibrary.org/search.json',
         data: {'q': searchQuery, 'fields': 'key,title,author_name,first_sentence,cover_edition_key', 'limit': 25, 'sort': 'rating', },
         
         success: function(response) {
-            //console.log(response)
             showResults(response)
         },
         error: function(xhr) {
@@ -140,7 +131,6 @@ function showResults(response) {
     response = response['docs']
     allDoseDeets = ""
     for(let i = 0; i < response.length; i++) {
-        //console.log(response[i])
         book = response[i]
         deets = '<div class="search-book-cover-container">'
         if (book['cover_edition_key']) {
@@ -205,12 +195,10 @@ function showResults(response) {
 function clampAll() {
     const titles = document.querySelectorAll('.search-book-title')
     for(title of titles) {
-        //console.log(title)
         $clamp(title, {clamp: 2})
     }
     const authors = document.querySelectorAll('.search-book-author')
     for(author of authors) {
-        //console.log(title)
         $clamp(author, {clamp: 2})
     }
 }
