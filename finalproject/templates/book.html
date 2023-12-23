@@ -49,16 +49,18 @@ Book -
         {% endif %}
         </div>
 
-        <div class="review">
-            <!-- <i class="star fa-solid fa-star"></i> -->
-            <!-- <i class="star fa-solid fa-star"></i> -->
-            <i class="star fa-regular fa-star"></i>
-            <i class="star fa-regular fa-star"></i>
-            <i class="star fa-regular fa-star"></i>
-            <i class="star fa-regular fa-star"></i>
-            <i class="star fa-regular fa-star"></i>
-            <span id="review-saved" class="hidden alert alert-success">Changed Saved!</span>
-        </div>
+        {% if current_user.is_authenticated and dbm.ubc_exists(current_user.id, olid) %}
+            <div class="review">
+                <!-- <i class="star fa-solid fa-star"></i> -->
+                <!-- <i class="star fa-solid fa-star"></i> -->
+                <i class="star fa-regular fa-star"></i>
+                <i class="star fa-regular fa-star"></i>
+                <i class="star fa-regular fa-star"></i>
+                <i class="star fa-regular fa-star"></i>
+                <i class="star fa-regular fa-star"></i>
+                <span id="review-saved" class="hidden alert alert-success">Changed Saved!</span>
+            </div>
+        {% endif %}
 
 
         <div class="notes">
